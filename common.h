@@ -9,6 +9,7 @@ typedef struct Account {
     int balance;
     int id;
     pthread_t thread;
+    pthread_mutex_t *accountlock;
 } Account;
 
 typedef struct Bank {
