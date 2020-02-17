@@ -8,6 +8,9 @@ Bank *Bank_new(int numAccounts, int initialBalance) {
     b->accounts = (Account **)malloc(numAccounts * sizeof(Account *));
     for(int i = 0; i < numAccounts; ++i) {
         b->accounts[i] = Account_new(i, initialBalance);
+        /*pthread_mutex_t newlock = PTHREAD_MUTEX_INITIALIZER;
+        b->accounts[i]->accountlock = NULL;
+        b->accounts[i]->accountlock = &newlock;*/
     }
     
     return b;
@@ -37,7 +40,7 @@ void Bank_open(Bank *b) {
 
 void Bank_transfer(Bank *b, int from, int to, int amount) {
     // Uncomment line when race condition in Bank_test() has been resolved.
-    // if(Bank_shouldTest(b)) Bank_test(b);
+    if(Bank_shouldTest(b)) Bank_test(b);
 
     if(Account_withdraw(b->accounts[from], amount)) {
         Account_deposit(b->accounts[to], amount);
