@@ -4,9 +4,9 @@ Account *Account_new(int id, int initialBalance) {
     Account *a = (Account *)malloc(sizeof(Account));
     a->id = id;
     a->balance = initialBalance;
-    a->accountlock = NULL;
+    //a->accountlock = NULL;
     pthread_mutex_t newlock = PTHREAD_MUTEX_INITIALIZER;
-    a->accountlock = &newlock;
+    a->accountlock = newlock;
     return a;
 }
 
