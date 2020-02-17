@@ -5,7 +5,7 @@
 
 int main() {
     srand(time(NULL));
-
+    print("Hello")
     Bank *b = Bank_new(NACCOUNTS, INITIAL_BALANCE);
     Bank_open(b);
     Bank_destroy(b);
