@@ -49,6 +49,11 @@ void Bank_transfer(Bank *b, int from, int to, int amount) {
     Bank_test(b);
 }
 
+void Bank_createTester(Bank *b){
+    pthread_t bankTester;
+    pthread_create(bankTester, Bank_test, b);
+}
+
 void Bank_test(Bank *b) {
     int sum = 0;
 

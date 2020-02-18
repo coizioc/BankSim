@@ -9,6 +9,7 @@ Bank *Bank_new(int numAccounts, int initialBalance);
 void Bank_destroy(Bank *b);
 void Bank_open(Bank *b);
 void Bank_transfer(Bank *b, int from, int to, int amount);
+void Bank_createTester(Bank *b);
 void Bank_test(Bank *b);
 
 TransferThreadParameters *TransferThreadParameters_new(Bank *b, int fromAccount, int maxAmount);
