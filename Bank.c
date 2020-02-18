@@ -9,8 +9,6 @@ Bank *Bank_new(int numAccounts, int initialBalance) {
     for(int i = 0; i < numAccounts; ++i) {
         b->accounts[i] = Account_new(i, initialBalance);
     }
-    pthread_cond_t condition = PTHREAD_COND_INITIALIZER;
-    b->completed = condition;
     pthread_mutex_t lk = PTHREAD_MUTEX_INITIALIZER;
     b->bankLock = lk;
     
@@ -43,26 +41,34 @@ void Bank_transfer(Bank *b, int from, int to, int amount) {
     // Uncomment line when race condition in Bank_test() has been resolved.
     if (Bank_shouldTest(b)) Bank_createTester(b);
 
+    pthread_mutex_lock(&b->bankLock);
     if(Account_withdraw(b->accounts[from], amount)) {
         Account_deposit(b->accounts[to], amount);
     }
+    pthread_mutex_unlock(&b->bankLock);
+
 
 }
 
 void Bank_createTester(Bank *b){
-    pthread_t bankTester;
+    pthread_t *bankTester = (pthread_t*)malloc(sizeof(pthread_t));
     pthread_create(bankTester, NULL, Bank_test, b);
 }
 
-void Bank_test(Bank *b) {
+void *Bank_test(void *bank) {
+    Bank *b = (Bank*) bank;
     int sum = 0;
 
+    // critical section
+    pthread_mutex_lock(&b->bankLock);
     for(int i = 0; i < b->numAccounts; ++i) {
         pthread_t currentThreadId = pthread_self();
         Account *currAccount = b->accounts[i];
         printf("%lu Account[%d] balance %d\n", pthread_self(), currAccount->id, currAccount->balance);
         sum += b->accounts[i]->balance;
     }
+    pthread_mutex_unlock(&b->bankLock);
+    // end section
     printf("%lu Sum: %d\n", pthread_self(), sum);
     if(sum != b->numAccounts * b->initialBalance) {
         printf("%lu Money was gained or lost!\n", pthread_self());

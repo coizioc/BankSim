@@ -18,7 +18,6 @@ typedef struct Bank {
     long ntransacts;
     int ntransactsInProgress;
     Account **accounts;
-    pthread_cond_t completed;
     pthread_mutex_t bankLock;
 } Bank;
 
