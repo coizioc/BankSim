@@ -46,12 +46,12 @@ void Bank_transfer(Bank *b, int from, int to, int amount) {
         Account_deposit(b->accounts[to], amount);
     }
 
-    Bank_test(b);
+    Bank_createTester(b);
 }
 
 void Bank_createTester(Bank *b){
     pthread_t bankTester;
-    pthread_create(bankTester, Bank_test, b);
+    pthread_create(bankTester, NULL, Bank_test, b);
 }
 
 void Bank_test(Bank *b) {
