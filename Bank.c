@@ -40,11 +40,13 @@ void Bank_open(Bank *b) {
 
 void Bank_transfer(Bank *b, int from, int to, int amount) {
     // Uncomment line when race condition in Bank_test() has been resolved.
-    if(Bank_shouldTest(b)) Bank_test(b);
+    b->ntransacts++;
 
     if(Account_withdraw(b->accounts[from], amount)) {
         Account_deposit(b->accounts[to], amount);
     }
+
+    Bank_test(b);
 }
 
 void Bank_test(Bank *b) {
@@ -63,9 +65,4 @@ void Bank_test(Bank *b) {
     } else {
         printf("%lu The bank is in balance!\n", pthread_self());
     }
-}
-
-int Bank_shouldTest(Bank *b) {
-    b->ntransacts++;
-    return b->ntransacts % NTEST == 0;
 }

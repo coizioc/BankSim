@@ -10,7 +10,6 @@ void Bank_destroy(Bank *b);
 void Bank_open(Bank *b);
 void Bank_transfer(Bank *b, int from, int to, int amount);
 void Bank_test(Bank *b);
-int Bank_shouldTest(Bank *b);
 
 TransferThreadParameters *TransferThreadParameters_new(Bank *b, int fromAccount, int maxAmount);
 void *transfer_thread(void *vargp);
