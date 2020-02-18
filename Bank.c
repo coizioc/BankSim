@@ -23,10 +23,12 @@ void Bank_destroy(Bank *b) {
 
 void Bank_open(Bank *b) {
     //Goes through all the accounts
+    
     for(int i = 0; i < b->numAccounts; ++i) {
         
         TransferThreadParameters *params = TransferThreadParameters_new(b, i, b->initialBalance);
         pthread_create(&b->accounts[i]->thread, NULL, transfer_thread, params);
+        
     }
 
     for(int i = 0; i < b->numAccounts; ++i) {
