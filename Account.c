@@ -38,7 +38,7 @@ int Account_withdraw(Account *a, int amount) {
     } else {
         //wait/notify condition here
         a->fundsneeded = amount;
-        if(a->fundsneeded < a->balance && a->fundsneeded > 0) pthread_cond_wait(&a->lowfunds, &a->accountlock);
+        while(a->fundsneeded < a->balance && a->fundsneeded > 0) pthread_cond_wait(&a->lowfunds, &a->accountlock);
         if(a->balance >= a->fundsneeded) {
             int newBalance = a->balance - amount;
             a->balance = newBalance;
