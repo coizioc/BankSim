@@ -39,10 +39,15 @@ int Account_withdraw(Account *a, int amount) {
         //wait/notify condition here
         a->fundsneeded = amount;
         if(a->fundsneeded < a->balance && a->fundsneeded > 0) pthread_cond_wait(&a->lowfunds, &a->accountlock);
-        int newBalance = a->balance - amount;
-        a->balance = newBalance;
+        if(a->balance >= a->fundsneeded) {
+            int newBalance = a->balance - amount;
+            a->balance = newBalance;
+        }else {
+            pthread_mutex_unlock(&a->accountlock);
+            return 0;
+        }
         //TEST
-        if(a->balance < 0) printf("NEGATIVE BALANCE\n");
+        //if(a->balance < 0) printf("NEGATIVE BALANCE\n");
         pthread_mutex_unlock(&a->accountlock);
         return 1;
     }
