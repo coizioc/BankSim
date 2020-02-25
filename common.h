@@ -8,7 +8,10 @@
 typedef struct Account {
     int balance;
     int id;
+    int fundsneeded;
     pthread_t thread;
+    pthread_mutex_t accountlock;
+    pthread_cond_t lowfunds;
 } Account;
 
 typedef struct Bank {
@@ -17,6 +20,7 @@ typedef struct Bank {
     long ntransacts;
     int ntransactsInProgress;
     Account **accounts;
+    pthread_mutex_t bankLock;
 } Bank;
 
 typedef struct TransferThreadParameters {
